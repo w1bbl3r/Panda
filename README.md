@@ -51,7 +51,7 @@ Using a terminal window in the root of the project
 npm install
 ```
 
-2. Run the prohect
+2. Run the service
 ```sh
 npm start
 ```
