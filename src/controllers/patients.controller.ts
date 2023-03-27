@@ -16,6 +16,9 @@ import {Patient} from '../models';
 import {PatientRepository} from '../repositories';
 
 const INVALID_NHS_NUMBER = 'An invalid NHS number has been provided';
+const WEIGHTING_FACTOR = 10;
+const MODULUS_11 = 11;
+const INVALID_CHECK_DIGIT = 10;
 
 export class PatientsController {
   constructor(
@@ -154,20 +157,20 @@ export class PatientsController {
   private checkDigit(nhs_number: String): Boolean {
     // Multiply first 9 elements by a weighting factor and add them together
     let total = 0;
-    let weightingFactor = 10;
+    let weightingFactor = WEIGHTING_FACTOR;
     for (let i = 0; i < nhs_number.length - 1; i++) {
       total = total + ((parseInt(nhs_number[i], 10)) * weightingFactor);
       weightingFactor = weightingFactor - 1;
     }
 
     // Divide the total by 11 and grab the remainder
-    const remainder = total % 11;
+    const remainder = total % MODULUS_11;
 
     // If the remainder is 0 then use 11 else use the remainder
-    const checkDigit = remainder === 11 ? 0 : 11 - remainder;
+    const checkDigit = remainder === MODULUS_11 ? 0 : MODULUS_11 - remainder;
 
     // If the checkdigit is 10, we must fail it
-    if (checkDigit === 10) {
+    if (checkDigit === INVALID_CHECK_DIGIT) {
       return false;
     }
 
